@@ -1,0 +1,129 @@
+classdef CITF
+    %CITF: define the central part of the interferometer before the end
+    %mirror are installed. The input mirror substrate is inside the cavity
+       
+    properties
+        I_PRM               % could be interface or mirror, HR inside the cavity
+        I_SRM               % could be interface or mirror, HR inside the cavity
+        
+        I_North_mirror      % could be interface or mirror, HR inside the cavity
+        I_East_mirror       % could be interface or mirror, HR inside the cavity
+        
+        Laser_in            % Defined the laser beam, by default on PRM AR side, so outside the cavity
+        
+        d_PRM_BS            % Distance PRM - BS
+        d_BS_NIM            % Distance BS - input mirror north arm
+        d_BS_EIM            % Distance BS - input mirror east arm
+        
+        d_SRM_BS            %  Distance BS - SRM
+        
+        BS_R = 0.5;         % Reflectivity of the BS in power
+        
+        BS_r
+        BS_t
+        
+        Field_circ = [];    % Field circulating in the PRC
+        Field_ref = [];     % Field reflected by the PRC
+        Field_DP = [];      % Field at the dark port
+        Power_buildup = []; % Power buildup as the functions of inerations
+        
+        reso_North
+        reso_East
+        
+        Propagation_mat_PRM_NIM     % Pre-compute the complex matrix used for the propagation
+        Propagation_mat_PRM_EIM
+        Propagation_mat_SRM_NIM
+        Propagation_mat_SRM_EIM
+        
+        Cavity_phase_param = 100;         % Number of round trip to do to find the resonance condition (use in Cavity_resonance_phase() )
+    end
+    
+    methods
+        
+        function P = PRC1(varargin)
+            
+            switch nargin
+                case{0,1,2,3,4,5,6,7,8}
+                    disp('PRC1(): at least 8 arguments must be given: 4 interface/mirrors/cavity, 4 lengths, one laser beam')
+                    return
+                case 9
+                    if  ~(isa(varargin{1}, 'Interface') || isa(varargin{1}, 'Mirror'))
+                        error('PRC1(): the first argument (PRM) must be an instance of the class Interface or Mirror')
+                    end
+                    
+                    if  ~(isa(varargin{2}, 'Interface') || isa(varargin{2}, 'Mirror')
+                        error('PRC1(): the second argument (SRM) must be an instance of the class Interface or Mirror')
+                    end
+                    
+                    if  ~(isa(varargin{3}, 'Interface') || isa(varargin{3}, 'Mirror')
+                        error('PRC1(): the third argument (North arm input mirror) must be an instance of the class Interface or Mirror')
+                    end
+                    
+                    if  ~(isa(varargin{4}, 'Interface') || isa(varargin{4}, 'Mirror')
+                        error('PRC1(): the fourth argument (East arm input mirror) must be an instance of the class Interface or Mirror')
+                    end
+                    
+                    if  ~isa(varargin{5}, 'double')
+                        error('PRC1(): the fifth argument must be a scalar, the distance PRM-BS')
+                    end
+                    
+                    if  ~isa(varargin{6}, 'double')
+                        error('PRC1(): the sixth argument must be a scalar, the distance BS - North input mirror')
+                    end
+                    if  ~isa(varargin{7}, 'double')
+                        error('PRC1(): the seventh argument must be a scalar, the distance BS - East input mirror')
+                    end
+                    
+                    if  ~isa(varargin{8}, 'double')
+                        error('PRC1(): the eight argument must be a scalar, the distance SRM-BS')
+                    end
+                    
+                    if  ~isa(varargin{9}, 'E_Field')
+                        disp('PRC1(): the ninth argument must be an instance of the class E_field, the input laser beam')
+                        return
+                    end
+                    
+                    P.I_PRM = varargin{1};
+                    P.I_SRM = varargin{2};
+                    
+                    P.M_North_arm = varargin{3};
+                    P.M_East_arm = varargin{4};
+                    
+                    P.d_PRM_BS = varargin{5};
+                    P.d_BS_NIM = varargin{6};
+                    P.d_BS_EIM = varargin{7};
+                    P.d_SRM_BS = varargin{8};
+                    
+                    P.Laser_in = varargin{9};
+                    
+                    % Calculate the amplitude reflectivity and
+                    % transmissivity of the BS
+                    
+                    P.BS_r = sqrt(P.BS_R);
+                    P.BS_t = 1i*sqrt(1-P.BS_R);
+                    
+                    
+                    % Pre calculate the propagation matrix
+                    
+                    tmp_length = P.d_PRM_BS + P.d_BS_NIM;
+                    P.Propagation_mat_PRM_NIM = Prop_operator(P.Laser_in,tmp_length);
+                    
+                    tmp_length = P.d_PRM_BS + P.d_BS_EIM;
+                    P.Propagation_mat_PRM_EIM =  Prop_operator(P.Laser_in,tmp_length);
+                    
+                    tmp_length = P.d_SRM_BS + P.d_BS_NIM;
+                    P.Propagation_mat_SRM_NIM =  Prop_operator(P.Laser_in,tmp_length);
+                    
+                    tmp_length = P.d_SRM_BS + P.d_BS_EIM;
+                    P.Propagation_mat_SRM_EIM =  Prop_operator(P.Laser_in,tmp_length);
+                                      
+                otherwise
+                    disp('PRC1(): invalid number of input arguments, PRC not created')
+                    
+            end
+            
+        end
+        
+    end
+    
+end

@@ -1,0 +1,77 @@
+function Pout = Cavity_resonance_phase(Pin)
+% Pout = Cavity_resonance_phase(Pin) find the resonances of a PRC cavity
+% This procedure find the resonance condition in the North and East arms of
+% the cavity by adjusting the phase difference after round trips of
+% light
+% Calculate the resonance condition FOR THE CARRIER. The arm cavities are supposed to
+% be set on resonance for the carrier.
+
+Pout = Pin;
+
+% first, transmit the laser beam through PRM
+
+Field_in =  Change_E_n(Pin.Laser_in,Pin.I_PRM.n2);
+Field_in = Transmit_Reflect_Interface(Field_in,Pin.I_PRM);
+
+
+num_iter = Pin.Cavity_phase_param;
+Length.phase = zeros(1,num_iter,'double');
+
+% First for the North arm of the PRC
+
+Field_Circ = Field_in;
+
+for q = 2:num_iter
+    Field_temp1 = Field_Circ;
+  
+    Field_Circ = Pin.BS_r*Propagate_E(Field_Circ,Pin.Propagation_mat_PRM_NIM);
+    
+    % Go through the north TM substrate
+    [~,Field_Circ] = Transmit_Reflect_Mirror(Field_Circ,Pin.M_North_arm,'AR');
+    Field_Circ = (-1)*Field_Circ;   % (-1) since the carrier is resonant in the arm
+    
+    Field_Circ = Pin.BS_r*Propagate_E(Field_Circ,Pin.Propagation_mat_PRM_NIM);
+    Field_Circ = Reflect_mirror(Field_Circ,Pin.I_PRM);
+    Length.phase(q) = angle(Calculate_Overlap(Field_Circ,Field_temp1));
+end
+
+Length.phase = unwrap(Length.phase);
+%plot(Length.phase)
+
+Pout.reso_North = exp(-1i*mean(Length.phase));
+% To have the one way phase shift
+Pout.reso_North = sqrt(Pout.reso_North);
+
+%------------------------------------------------------------------------
+% Do the same thing for the East arm of the PRC
+Length.phase = zeros(1,num_iter,'double');
+
+% First for the North arm of the PRC
+
+Field_Circ = Field_in;
+
+for q = 2:num_iter
+    Field_temp1 = Field_Circ;
+    Field_Circ = Pin.BS_t*Propagate_E(Field_Circ,Pin.Propagation_mat_PRM_EIM);
+
+    % Go through the east TM substrate
+    [~,Field_Circ] = Transmit_Reflect_Mirror(Field_Circ,Pin.M_East_arm,'AR');
+    Field_Circ = (-1)*Field_Circ;   % (-1) since the carrier is resonant in the arm and another one to be on the dark fringe
+    
+    Field_Circ = Pin.BS_t*Propagate_E(Field_Circ,Pin.Propagation_mat_PRM_EIM);
+    Field_Circ = Reflect_mirror(Field_Circ,Pin.I_PRM);
+    Length.phase(q) = angle(Calculate_Overlap(Field_Circ,Field_temp1));
+end
+
+Length.phase = unwrap(Length.phase);
+%plot(Length.phase)
+
+Pout.reso_East = exp(-1i*mean(Length.phase));
+% To have the one way phase shift
+Pout.reso_East = sqrt(Pout.reso_East);
+
+
+disp(['Found the phase for the PRC ' inputname(1)])
+
+
+end
