@@ -1,6 +1,6 @@
 % Advanced LIGO dual recycling CITF
 
-clear all; close all; clear classes
+clear all; close all; clear classes;
 addpath(genpath('Classes'));
 
 disp('---------------------------------------------------------------------------')

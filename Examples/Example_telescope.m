@@ -7,7 +7,7 @@ disp('  ')
 
 
 % Define the grid for the simulation: 256 X 256, 10 cm X 10 cm
-G1 = Grid(256,0.10);
+G1 = Grid(256,0.0197853);
 
 % Define one incoming beam (beam radius: 5 cm) 
 E_input = E_Field(G1,'w',0.0125);
