@@ -28,7 +28,7 @@ Fit_TEM00(E2);
 disp('')
 fprintf('New length of the grid: %g \n',G3.Length)
 disp('After telescope FFT code result:')
-[end_radius, end_RofC]=Fit_TEM00(E3);
+Fit_TEM00(E3);
 
 % G1 = Grid(128,3.5E-3); % Define the grid for the simulation: 128 X 128, 3.5 mm X 3.5 mm
 % E_input = E_Field(G1,'w0',133E-6); % Define the incoming beam before the input mirror surface (beam waist 0.450 mm, we start 35 mm before the waist)
