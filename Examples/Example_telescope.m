@@ -7,7 +7,7 @@ disp('  ')
 
 
 % Define the grid for the simulation: 256 X 256, 10 cm X 10 cm
-G1 = Grid(256,0.0197853);
+G1 = Grid(256,0.10);
 
 % Define one incoming beam (beam radius: 5 cm) 
 E_input = E_Field(G1,'w',0.0125);
@@ -20,9 +20,6 @@ E2 = Propagate_E(E_input,10);
 % Propagate 4.45 m
 % 1 second lens of focal length -3.6 m
 % Then propagate 0.6 m
-fprintf('Old length of the grid: %g \n',G1.Length)
-disp('Before FFT code result:')
-Fit_TEM00(E2)
 
 [E3,G3] = Focus_Beam_With_Telescope(E2,[8.2 4.45 -3.6 0.6]);
 
@@ -55,7 +52,6 @@ q_propa = (Mat_propa(1,1)*q_start + Mat_propa(1,2))/(Mat_propa(2,1)*q_start + Ma
  
  disp('ABCD matrix result:') 
  fprintf('beam radius: %g      wavefront RofC: %g \n',Beam_rad,RofC)
-
 
 
 

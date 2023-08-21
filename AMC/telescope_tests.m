@@ -17,10 +17,10 @@ G1.Step_sq=G1.Step^2;
 
 G_out=Grid(256,0.4);
 
-E1 = Resample_E(E_input,G_out);
+%E1 = Resample_E(E_input,G_out);
 
 % Propagate over 10m
-E2 = Propagate_E(E1,10);
+E2 = Propagate_E(E_input,10);
 
 fprintf('Old length of the grid: %g \n',G1.Length)
 disp('Before FFT code result:')
@@ -30,7 +30,7 @@ disp('')
 %% Then define a telescope:
 
 % Initialize x values and empty array for F32
-x_values = linspace(1.79747, 1.79848, 10);
+x_values = linspace(0.238, 0.242, 10);
 F33_values = zeros(size(x_values));
 min_diff = inf;
 target_W = 133e-6;

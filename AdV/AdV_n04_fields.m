@@ -69,7 +69,7 @@ AV_DR = Refined_tuning(AV_DR,'zoom',0.04,'Nb_iter',4,'Find_max','quadratic_fit',
 AV_DR = Calculate_fields(AV_DR,'iter',200);
 
 %% Save figures of Carrier and SBs
-figure(1450); E_Plot(AV_DR.Field_circ,'SB','SB_num',1) %trouver comment choisir le champ "circulating field"
+figure(1450); E_Plot(AV_DR.Field_circ,'SB','SB_num',1)
 vstring=int2str(1450);
 filename = ['6MHz_' vstring '_0-ref'];
 saveas(gcf,filename);
