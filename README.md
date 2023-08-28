@@ -13,9 +13,9 @@
     │  
     ├── AdV                      # OSCAR simulations of the Advanced Virgo interferometer
     ├── AMC                      # OSCAR simulations of the Mode Cleaner
-    ├── Classes                      # OSCAR package classes
-    ├── Examples                      # OSCAR examples
-    └── Results                      # Folder containing the results of the OSCAR simulations (mainly figures)
+    ├── Classes                  # OSCAR package classes
+    ├── Examples                 # OSCAR examples
+    └── Results                  # Folder containing the results of the OSCAR simulations (mainly figures)
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
