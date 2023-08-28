@@ -11,12 +11,10 @@
 
     My Directory
     │  
-    │ AdV_n04_demod_circ.m           # Get the demodulated signals of the circulating field
-    │ AdV_n04_fields.m               # Plot and save the fields
-    │ AdV_n04_gains.m                # Get the gains of the recycling cavities
-    │ AdV_n04_signals.m              # Get the PDs & quads signals
-    │ AdV_n04.m                      # Avanced Virgo n04 basic file coming from the OSCAR [fft-playground](https://git.ligo.org/virgo/osd/fft-playground/-/tree/master)
+    ├── AdV                      # OSCAR simulations of the Advanced Virgo interferometer
+    ├── AMC                      # OSCAR simulations of the Mode Cleaner
     ├── Classes                      # OSCAR package classes
+    ├── Examples                      # OSCAR examples
     └── Results                      # Folder containing the results of the OSCAR simulations (mainly figures)
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------

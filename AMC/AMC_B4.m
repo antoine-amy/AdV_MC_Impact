@@ -7,14 +7,27 @@ disp('                  OSCAR V3.2  - DR nominal    ')
 disp('  ')
 
 %% Define the input field with the correct waist (133um not 340um since the MC simulation works in vacuum)
-G1 = Grid(128,800E-6);
+% G1 = Grid(128,800E-6);
+G1 = Grid(256,800E-6);
 E_POP = E_Field(G1,'w0',133E-6); %Classic gaussian field
 
+I1 = Interface(AV_DR.Field_POP.Grid,'CA',0.8,'T',1,'RoC',32.558);
+E_POP_plan = Transmit_Reflect_Interface(AV_DR.Field_POP,I1);
+
+Fit_TEM00(E_POP_plan);
+E_Plot(E_POP_plan)
+
+% Propagate another time over 100m
+E_POP_plan = Propagate_E(E_POP_plan,1);
+
 % Getting the POP field infos
-E_POP.Field=AV_DR.Field_POP.Field;
+E_POP.Field=E_POP_plan.Field;
 E_POP.Nb_Pair_SB=2;
-E_POP.SB=AV_DR.Field_POP.SB;
+E_POP.SB=E_POP_plan.SB;
 E_diaphragm = Propagate_E(E_POP,1.9914e-3);
+disp('E_POP characteristics:')
+Fit_TEM00(AV_DR.Field_POP);
+disp(' ')
 disp('E_diaphragm characteristics:')
 Fit_TEM00(E_diaphragm);
 disp(' ')
